@@ -17,6 +17,12 @@ void Game::stop()
 
 void Game::clean()
 {
+    if (drawing_rect)
+    {
+        delete drawing_rect;
+        drawing_rect = nullptr;
+    }
+
     if (image_surface)
     {
         SDL_FreeSurface(image_surface);
@@ -69,6 +75,11 @@ bool Game::init()
         return false;
     }
 
+    drawing_rect = new SDL_Rect;
+    drawing_rect->x = drawing_rect->y = 0;
+    drawing_rect->w = WIDTH;
+    drawing_rect->h = HEIGHT;
+
     return true;
 }
 
@@ -99,7 +110,7 @@ void Game::handle_events()
 
 void Game::render()
 {
-    SDL_BlitSurface(image_surface, NULL, window_surface, NULL);
+    SDL_BlitScaled(image_surface, NULL, window_surface, drawing_rect);
     SDL_UpdateWindowSurface(window);
 }
 

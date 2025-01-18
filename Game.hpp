@@ -16,6 +16,7 @@ private:
     SDL_Window *window = nullptr;
     SDL_Surface *window_surface = nullptr;
     SDL_Surface *image_surface = nullptr;
+    SDL_Rect *drawing_rect = nullptr;
     SDL_Event event;
 
 public:
