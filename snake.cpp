@@ -7,8 +7,8 @@ class Game
 {
 private:
     bool is_running = true;
-    const int WIDTH = 800;
-    const int HEIGHT = 600;
+    constexpr static int WIDTH = 800;
+    constexpr static int HEIGHT = 600;
 
     SDL_Window *window = nullptr;
     SDL_Surface *window_surface = nullptr;
@@ -131,6 +131,6 @@ int main(int argc, char *argv[])
     }
 
     game.run();
-    
+
     return 0;
 }
