@@ -66,11 +66,14 @@ bool Game::init()
         return false;
     }
 
-    tex = load_texture("img/flower.bmp");
-    if (tex == NULL)
+    int x = CELL_SIZE;
+    for (int i = 0; i < RECT_LEN; ++i)
     {
-        std::cerr << "Failed to load a texture" << std::endl;
-        return false;
+        rects[i].x = x;
+        rects[i].y = CELL_SIZE;
+        rects[i].w = CELL_SIZE;
+        rects[i].h = CELL_SIZE;
+        x += CELL_SIZE;
     }
 
     return true;
@@ -103,8 +106,13 @@ void Game::handle_events()
 
 void Game::render()
 {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, tex, NULL, NULL);
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+    SDL_RenderFillRects(renderer, rects, RECT_LEN);
+    SDL_RenderDrawRects(renderer, rects, RECT_LEN);
+    
     SDL_RenderPresent(renderer);
 }
 

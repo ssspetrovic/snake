@@ -12,11 +12,14 @@ private:
     bool is_running = true;
     constexpr static int WIDTH = 800;
     constexpr static int HEIGHT = 600;
+    constexpr static int CELL_SIZE = 20;
+    constexpr static int RECT_LEN = 10;
 
     SDL_Window *window = nullptr;
     SDL_Event event;
     SDL_Renderer *renderer = nullptr;
     SDL_Texture *tex = nullptr;
+    SDL_Rect rects[RECT_LEN];
 
 public:
     Game();
