@@ -17,22 +17,16 @@ void Game::stop()
 
 void Game::clean()
 {
-    if (drawing_rect)
+    if (tex)
     {
-        delete drawing_rect;
-        drawing_rect = nullptr;
+        SDL_DestroyTexture(tex);
+        tex = nullptr;
     }
 
-    if (image_surface)
+    if (renderer)
     {
-        SDL_FreeSurface(image_surface);
-        image_surface = nullptr;
-    }
-
-    if (window_surface)
-    {
-        SDL_FreeSurface(window_surface);
-        window_surface = nullptr;
+        SDL_DestroyRenderer(renderer);
+        renderer = nullptr;
     }
 
     if (window)
@@ -65,20 +59,19 @@ bool Game::init()
         return false;
     }
 
-    // Window is successfully created
-    window_surface = SDL_GetWindowSurface(window);
-
-    image_surface = optimize_surface("img/flower.bmp");
-    if (image_surface == NULL)
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (renderer == NULL)
     {
-        std::cerr << "Failed to optimize the surface" << std::endl;
+        std::cerr << "Failed to create a renderer" << std::endl;
         return false;
     }
 
-    drawing_rect = new SDL_Rect;
-    drawing_rect->x = drawing_rect->y = 0;
-    drawing_rect->w = WIDTH;
-    drawing_rect->h = HEIGHT;
+    tex = load_texture("img/flower.bmp");
+    if (tex == NULL)
+    {
+        std::cerr << "Failed to load a texture" << std::endl;
+        return false;
+    }
 
     return true;
 }
@@ -110,8 +103,9 @@ void Game::handle_events()
 
 void Game::render()
 {
-    SDL_BlitScaled(image_surface, NULL, window_surface, drawing_rect);
-    SDL_UpdateWindowSurface(window);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, tex, NULL, NULL);
+    SDL_RenderPresent(renderer);
 }
 
 void Game::run()
@@ -123,10 +117,8 @@ void Game::run()
     }
 }
 
-SDL_Surface *Game::optimize_surface(const std::string &filepath)
+SDL_Texture *Game::load_texture(const std::string &filepath)
 {
-    SDL_Surface *optimized_surface = nullptr;
-
     // Load the image from the specified file
     SDL_Surface *image_surface = SDL_LoadBMP(filepath.c_str());
     if (image_surface == nullptr)
@@ -135,13 +127,13 @@ SDL_Surface *Game::optimize_surface(const std::string &filepath)
         return nullptr;
     }
 
-    optimized_surface = SDL_ConvertSurface(image_surface, window_surface->format, 0);
-    if (optimized_surface == nullptr)
+    tex = SDL_CreateTextureFromSurface(renderer, image_surface);
+    if (tex == nullptr)
     {
-        std::cerr << "Failed to convert the surface: " << SDL_GetError() << std::endl;
+        std::cerr << "Failed to convert the surface to a texture: " << SDL_GetError() << std::endl;
     }
 
     SDL_FreeSurface(image_surface);
 
-    return optimized_surface;
+    return tex;
 }

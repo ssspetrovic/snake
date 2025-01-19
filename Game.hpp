@@ -14,10 +14,9 @@ private:
     constexpr static int HEIGHT = 600;
 
     SDL_Window *window = nullptr;
-    SDL_Surface *window_surface = nullptr;
-    SDL_Surface *image_surface = nullptr;
-    SDL_Rect *drawing_rect = nullptr;
     SDL_Event event;
+    SDL_Renderer *renderer = nullptr;
+    SDL_Texture *tex = nullptr;
 
 public:
     Game();
@@ -31,7 +30,7 @@ public:
     void handle_events();
     void render();
     void run();
-    SDL_Surface *optimize_surface(const std::string &filepath);
+    SDL_Texture *load_texture(const std::string &filepath);
 };
 
 #endif
