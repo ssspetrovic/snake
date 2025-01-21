@@ -62,8 +62,8 @@ bool Game::init()
     }
 
     SDL_Rect part;
-    part.x = 0;
-    part.y = 0;
+    part.x = WIDTH / 2 - CELL_SIZE;
+    part.y = HEIGHT / 2 - CELL_SIZE;
     part.w = CELL_SIZE;
     part.h = CELL_SIZE;
     snake.push_back(part);
