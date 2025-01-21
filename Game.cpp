@@ -177,7 +177,7 @@ void Game::play()
     current_time = SDL_GetTicks();
     if (current_time > last_time + MOVE_DELAY)
     {
-        move(last_direction);
+        Game::move(last_direction);
         last_time = current_time;
     }
 }
