@@ -70,29 +70,7 @@ bool Game::init()
     return true;
 }
 
-void Game::move_right()
-{
-    auto &part = snake.front();
-    part.x -= STEP;
-}
-
-void Game::move_left()
-{
-    auto &part = snake.front();
-    part.x -= STEP;
-}
-
-void Game::move_up()
-{
-    auto &part = snake.front();
-    part.y -= STEP;
-}
-
-void Game::move_down()
-{
-    auto &part = snake.front();
-    part.y += STEP;
-}
+bool should_extend = false;
 
 void Game::handle_keyboard_event(SDL_KeyboardEvent key)
 {
@@ -124,6 +102,9 @@ void Game::handle_keyboard_event(SDL_KeyboardEvent key)
         {
             previous_direction = Direction::DOWN;
         }
+        break;
+    case SDLK_s:
+        should_extend = true;
         break;
     }
 }
@@ -166,18 +147,25 @@ void Game::move_handle_margins()
 
 void Game::move_body(SDL_Rect head_prev)
 {
-    for (int i = 1; i < snake.size() - 1; ++i)
+    // SDL_Rect prev_position = head_prev; // Start with the saved head position
+    for (size_t i = 1; i < snake.size(); ++i)
     {
-        SDL_Rect tmp = snake[i];
-        snake[i] = snake[i - 1];
-        head_prev = tmp;
+        SDL_Rect tmp = snake[i]; // Save the current segment's position
+        snake[i] = head_prev;    // Update this segment to follow the previous one
+        head_prev = tmp;         // Update prev_position to the saved value
     }
+}
+
+void Game::extend_snake(SDL_Rect tail_prev)
+{
+    snake.push_back(tail_prev);
 }
 
 void Game::move()
 {
     SDL_Rect &head = snake.front();
-    SDL_Rect &head_prev = snake.front();
+    SDL_Rect head_prev = snake.front();
+    SDL_Rect tail_prev = snake.back();
 
     switch (previous_direction)
     {
@@ -197,6 +185,13 @@ void Game::move()
 
     Game::move_handle_margins();
     Game::move_body(head_prev);
+    SDL_Rect tail_new = snake.back();
+
+    if (should_extend)
+    {
+        extend_snake(tail_prev);
+        should_extend = false;
+    }
 }
 
 void Game::play()
