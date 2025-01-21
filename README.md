@@ -21,3 +21,8 @@ g++ -o snake.out snake.cpp Game.cpp `sdl2-config --cflags --libs`
 # Run the game
 ./snake.out
 ```
+
+## Playing the game
+Control the snake using the arrow keys (&larr;, &uarr;, &rarr; or &darr;) and try to eat the 🍎!
+<br/>
+Use `ESC` key or &#10006; button to exit the game.
