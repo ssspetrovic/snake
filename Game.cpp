@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include "Game.hpp"
 
-Game::Game() = default;
+Game::Game() : last_direction(Direction::NONE), last_time(0) {}
 
 void Game::start()
 {
@@ -40,7 +40,7 @@ void Game::clean()
 
 Game::~Game()
 {
-    clean();
+    Game::clean();
 }
 
 bool Game::init()
@@ -79,12 +79,57 @@ bool Game::init()
     return true;
 }
 
+void Game::move_right()
+{
+    rects[RECT_LEN - 1].x += CELL_SIZE;
+}
+
+void Game::move_left()
+{
+    rects[RECT_LEN - 1].x -= CELL_SIZE;
+}
+
+void Game::move_up()
+{
+    rects[RECT_LEN - 1].y -= CELL_SIZE;
+}
+
+void Game::move_down()
+{
+    rects[RECT_LEN - 1].y += CELL_SIZE;
+}
+
 void Game::handle_key_input(SDL_KeyboardEvent key)
 {
     switch (key.keysym.sym)
     {
     case SDLK_ESCAPE:
-        stop();
+        Game::stop();
+        break;
+    case SDLK_RIGHT:
+        if (last_direction != Direction::LEFT)
+        {
+            last_direction = Direction::RIGHT;
+        }
+        break;
+    case SDLK_LEFT:
+        if (last_direction != Direction::RIGHT)
+        {
+            last_direction = Direction::LEFT;
+        }
+        break;
+    case SDLK_UP:
+        if (last_direction != Direction::DOWN)
+        {
+            last_direction = Direction::UP;
+        }
+        break;
+    case SDLK_DOWN:
+        if (last_direction != Direction::UP)
+        {
+            last_direction = Direction::DOWN;
+        }
+        break;
     }
 }
 
@@ -94,13 +139,46 @@ void Game::handle_events()
     {
         if (event.type == SDL_QUIT)
         {
-            stop();
+            Game::stop();
         }
 
         if (event.type == SDL_KEYDOWN)
         {
-            handle_key_input(event.key);
+            Game::handle_key_input(event.key);
         }
+    }
+}
+
+void Game::move(Direction direct)
+{
+    switch (direct)
+    {
+    case Direction::RIGHT:
+        Game::move_right();
+        break;
+    case Direction::LEFT:
+        Game::move_left();
+        break;
+    case Direction::UP:
+        Game::move_up();
+        break;
+    case Direction::DOWN:
+        Game::move_down();
+    }
+}
+
+void Game::play()
+{
+    if (last_direction == Direction::NONE)
+    {
+        return;
+    }
+
+    current_time = SDL_GetTicks();
+    if (current_time > last_time + MOVE_DELAY)
+    {
+        move(last_direction);
+        last_time = current_time;
     }
 }
 
@@ -112,16 +190,18 @@ void Game::render()
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRects(renderer, rects, RECT_LEN);
     SDL_RenderDrawRects(renderer, rects, RECT_LEN);
-    
+
     SDL_RenderPresent(renderer);
 }
 
 void Game::run()
 {
+    last_time = SDL_GetTicks();
     while (is_running)
     {
-        handle_events();
-        render();
+        Game::handle_events();
+        Game::play();
+        Game::render();
     }
 }
 

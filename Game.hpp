@@ -6,6 +6,15 @@
 
 #include <SDL2/SDL.h>
 
+enum class Direction
+{
+    RIGHT,
+    LEFT,
+    DOWN,
+    UP,
+    NONE
+};
+
 class Game
 {
 private:
@@ -13,13 +22,18 @@ private:
     constexpr static int WIDTH = 800;
     constexpr static int HEIGHT = 600;
     constexpr static int CELL_SIZE = 20;
-    constexpr static int RECT_LEN = 10;
+    constexpr static int RECT_LEN = 1;
+    constexpr static Uint32 MOVE_DELAY = 500;
 
     SDL_Window *window = nullptr;
     SDL_Event event;
     SDL_Renderer *renderer = nullptr;
     SDL_Texture *tex = nullptr;
     SDL_Rect rects[RECT_LEN];
+    Uint32 last_time;
+    Uint32 current_time;
+
+    Direction last_direction;
 
 public:
     Game();
@@ -32,7 +46,13 @@ public:
     void handle_key_input(SDL_KeyboardEvent key);
     void handle_events();
     void render();
+    void play();
+    void move(Direction direct);
     void run();
+    void move_right();
+    void move_left();
+    void move_up();
+    void move_down();
     SDL_Texture *load_texture(const std::string &filepath);
 };
 
