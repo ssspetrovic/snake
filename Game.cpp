@@ -150,22 +150,27 @@ void Game::handle_events(SDL_Event event)
 
 void Game::move_handle_margins()
 {
-    if (rects[RECT_LEN - 1].x >= WIDTH) // right margin
+    SDL_Rect rect_head = rects[RECT_LEN - 1];
+    if (rect_head.x >= WIDTH) // right margin
     {
-        rects[RECT_LEN - 1].x = 0;
+        rect_head.x = 0;
     }
-    if (rects[RECT_LEN - 1].x < 0) // left margin
+
+    if (rect_head.x < 0) // left margin
     {
-        rects[RECT_LEN - 1].x = WIDTH - CELL_SIZE;
+        rect_head.x = WIDTH - CELL_SIZE;
     }
-    if (rects[RECT_LEN - 1].y >= HEIGHT) // top margin
+
+    if (rect_head.y >= HEIGHT) // top margin
     {
-        rects[RECT_LEN - 1].y = 0;
+        rect_head.y = 0;
     }
-    if (rects[RECT_LEN - 1].y < 0) // bottom margin
+
+    if (rect_head.y < 0) // bottom margin
     {
-        rects[RECT_LEN - 1].y = HEIGHT - CELL_SIZE;
+        rect_head.y = HEIGHT - CELL_SIZE;
     }
+    rects[RECT_LEN - 1] = rect_head;
 }
 
 void Game::move_body(SDL_Rect head_prev)
