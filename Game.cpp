@@ -66,14 +66,14 @@ bool Game::init()
         return false;
     }
 
-    int x = CELL_SIZE;
+    int x = 0;
     for (int i = 0; i < RECT_LEN; ++i)
     {
         rects[i].x = x;
-        rects[i].y = CELL_SIZE;
+        rects[i].y = 0;
         rects[i].w = CELL_SIZE;
         rects[i].h = CELL_SIZE;
-        x += CELL_SIZE;
+        x += STEP;
     }
 
     return true;
@@ -81,22 +81,22 @@ bool Game::init()
 
 void Game::move_right()
 {
-    rects[RECT_LEN - 1].x += CELL_SIZE;
+    rects[RECT_LEN - 1].x += STEP;
 }
 
 void Game::move_left()
 {
-    rects[RECT_LEN - 1].x -= CELL_SIZE;
+    rects[RECT_LEN - 1].x -= STEP;
 }
 
 void Game::move_up()
 {
-    rects[RECT_LEN - 1].y -= CELL_SIZE;
+    rects[RECT_LEN - 1].y -= STEP;
 }
 
 void Game::move_down()
 {
-    rects[RECT_LEN - 1].y += CELL_SIZE;
+    rects[RECT_LEN - 1].y += STEP;
 }
 
 void Game::handle_key_input(SDL_KeyboardEvent key)
@@ -149,9 +149,31 @@ void Game::handle_events()
     }
 }
 
-void Game::move(Direction direct)
+void Game::handle_margins()
 {
-    switch (direct)
+    if (rects[RECT_LEN - 1].x >= WIDTH) // right margin
+    {
+        rects[RECT_LEN - 1].x = 0;
+    }
+    if (rects[RECT_LEN - 1].x < 0) // left margin
+    {
+        rects[RECT_LEN - 1].x = WIDTH - CELL_SIZE;
+    }
+    if (rects[RECT_LEN - 1].y >= HEIGHT) // top margin
+    {
+        rects[RECT_LEN - 1].y = 0;
+    }
+    if (rects[RECT_LEN - 1].y < 0) // bottom margin
+    {
+        rects[RECT_LEN - 1].y = HEIGHT - CELL_SIZE;
+    }
+}
+
+void Game::move()
+{
+    SDL_Rect head_prev = rects[RECT_LEN - 1];
+
+    switch (last_direction)
     {
     case Direction::RIGHT:
         Game::move_right();
@@ -164,6 +186,16 @@ void Game::move(Direction direct)
         break;
     case Direction::DOWN:
         Game::move_down();
+        break;
+    }
+
+    Game::handle_margins();
+
+    for (int i = RECT_LEN - 2; i >= 0; --i)
+    {
+        SDL_Rect temp = rects[i];
+        rects[i] = head_prev;
+        head_prev = temp;
     }
 }
 
@@ -177,7 +209,7 @@ void Game::play()
     current_time = SDL_GetTicks();
     if (current_time > last_time + MOVE_DELAY)
     {
-        Game::move(last_direction);
+        Game::move();
         last_time = current_time;
     }
 }

@@ -22,8 +22,9 @@ private:
     constexpr static int WIDTH = 800;
     constexpr static int HEIGHT = 600;
     constexpr static int CELL_SIZE = 20;
-    constexpr static int RECT_LEN = 1;
-    constexpr static Uint32 MOVE_DELAY = 500;
+    constexpr static int STEP = 20;
+    constexpr static int RECT_LEN = 4;
+    constexpr static Uint32 MOVE_DELAY = 400;
 
     SDL_Window *window = nullptr;
     SDL_Event event;
@@ -47,7 +48,8 @@ public:
     void handle_events();
     void render();
     void play();
-    void move(Direction direct);
+    void handle_margins();
+    void move();
     void run();
     void move_right();
     void move_left();
