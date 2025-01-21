@@ -33,17 +33,15 @@ private:
     SDL_Rect rects[RECT_LEN];
     Uint32 last_time;
     Uint32 current_time;
-
     Direction last_direction;
 
-public:
-    Game();
-    ~Game();
-
+    void move_right();
+    void move_left();
+    void move_up();
+    void move_down();
+    void clean();
     void start();
     void stop();
-    void clean();
-    bool init();
     void handle_key_input(SDL_KeyboardEvent key);
     void handle_events();
     void render();
@@ -51,12 +49,15 @@ public:
     void handle_margins();
     void move_body(SDL_Rect head_prev);
     void move();
-    void run();
-    void move_right();
-    void move_left();
-    void move_up();
-    void move_down();
+
     SDL_Texture *load_texture(const std::string &filepath);
+
+public:
+    Game();
+    ~Game();
+
+    bool init();
+    void run();
 };
 
 #endif
