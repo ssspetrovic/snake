@@ -30,7 +30,6 @@ private:
 
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;
-    SDL_Texture *tex = nullptr;
 
     std::vector<SDL_Rect> snake;
     Uint32 previous_time;
@@ -56,8 +55,6 @@ private:
     void play();
     void render();
     void clean();
-
-    SDL_Texture *load_texture(const std::string &filepath);
 
 public:
     Game();

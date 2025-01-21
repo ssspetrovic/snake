@@ -17,12 +17,6 @@ void Game::stop()
 
 void Game::clean()
 {
-    if (tex)
-    {
-        SDL_DestroyTexture(tex);
-        tex = nullptr;
-    }
-
     if (renderer)
     {
         SDL_DestroyRenderer(renderer);
@@ -246,25 +240,4 @@ void Game::run()
         Game::play();
         Game::render();
     }
-}
-
-SDL_Texture *Game::load_texture(const std::string &filepath)
-{
-    // Load the image from the specified file
-    SDL_Surface *image_surface = SDL_LoadBMP(filepath.c_str());
-    if (image_surface == nullptr)
-    {
-        std::cerr << "Failed to load the image: " << SDL_GetError() << std::endl;
-        return nullptr;
-    }
-
-    tex = SDL_CreateTextureFromSurface(renderer, image_surface);
-    if (tex == nullptr)
-    {
-        std::cerr << "Failed to convert the surface to a texture: " << SDL_GetError() << std::endl;
-    }
-
-    SDL_FreeSurface(image_surface);
-
-    return tex;
 }
