@@ -104,12 +104,6 @@ void Game::handle_keyboard_event(SDL_KeyboardEvent key)
             previous_direction = Direction::DOWN;
         }
         break;
-    case SDLK_s:
-        should_extend = true;
-        break;
-    case SDLK_a:
-        apple = generate_apple();
-        break;
     }
 }
 
@@ -233,10 +227,10 @@ void Game::move()
     move_body(head_prev);
     SDL_Rect tail_new = snake.back();
 
-    if (should_extend)
+    if (head.x == apple.x && head.y == apple.y)
     {
         snake.push_back(tail_prev);
-        should_extend = false;
+        apple = generate_apple();
     }
 }
 

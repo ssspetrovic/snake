@@ -27,7 +27,6 @@ private:
     constexpr static Uint32 MOVE_DELAY = 400;
 
     bool is_running = true;
-    bool should_extend = false;
 
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;
