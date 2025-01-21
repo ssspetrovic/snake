@@ -49,6 +49,7 @@ public:
     void render();
     void play();
     void handle_margins();
+    void move_body(SDL_Rect head_prev);
     void move();
     void run();
     void move_right();

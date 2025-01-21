@@ -169,6 +169,16 @@ void Game::handle_margins()
     }
 }
 
+void Game::move_body(SDL_Rect head_prev)
+{
+    for (int i = RECT_LEN - 2; i >= 0; --i)
+    {
+        SDL_Rect temp = rects[i];
+        rects[i] = head_prev;
+        head_prev = temp;
+    }
+}
+
 void Game::move()
 {
     SDL_Rect head_prev = rects[RECT_LEN - 1];
@@ -190,13 +200,7 @@ void Game::move()
     }
 
     Game::handle_margins();
-
-    for (int i = RECT_LEN - 2; i >= 0; --i)
-    {
-        SDL_Rect temp = rects[i];
-        rects[i] = head_prev;
-        head_prev = temp;
-    }
+    Game::move_body(head_prev);
 }
 
 void Game::play()
@@ -206,7 +210,7 @@ void Game::play()
         return;
     }
 
-    current_time = SDL_GetTicks();
+    Uint32 current_time = SDL_GetTicks();
     if (current_time > last_time + MOVE_DELAY)
     {
         Game::move();
