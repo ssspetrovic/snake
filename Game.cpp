@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include "Game.hpp"
 
-Game::Game() : last_direction(Direction::NONE), last_time(0) {}
+Game::Game() : previous_direction(Direction::NONE), previous_time(0) {}
 
 void Game::start()
 {
@@ -99,7 +99,7 @@ void Game::move_down()
     rects[RECT_LEN - 1].y += STEP;
 }
 
-void Game::handle_key_input(SDL_KeyboardEvent key)
+void Game::handle_keyboard_event(SDL_KeyboardEvent key)
 {
     switch (key.keysym.sym)
     {
@@ -107,33 +107,33 @@ void Game::handle_key_input(SDL_KeyboardEvent key)
         Game::stop();
         break;
     case SDLK_RIGHT:
-        if (last_direction != Direction::LEFT)
+        if (previous_direction != Direction::LEFT)
         {
-            last_direction = Direction::RIGHT;
+            previous_direction = Direction::RIGHT;
         }
         break;
     case SDLK_LEFT:
-        if (last_direction != Direction::RIGHT)
+        if (previous_direction != Direction::RIGHT)
         {
-            last_direction = Direction::LEFT;
+            previous_direction = Direction::LEFT;
         }
         break;
     case SDLK_UP:
-        if (last_direction != Direction::DOWN)
+        if (previous_direction != Direction::DOWN)
         {
-            last_direction = Direction::UP;
+            previous_direction = Direction::UP;
         }
         break;
     case SDLK_DOWN:
-        if (last_direction != Direction::UP)
+        if (previous_direction != Direction::UP)
         {
-            last_direction = Direction::DOWN;
+            previous_direction = Direction::DOWN;
         }
         break;
     }
 }
 
-void Game::handle_events()
+void Game::handle_events(SDL_Event event)
 {
     while (SDL_PollEvent(&event) != 0)
     {
@@ -141,15 +141,14 @@ void Game::handle_events()
         {
             Game::stop();
         }
-
         if (event.type == SDL_KEYDOWN)
         {
-            Game::handle_key_input(event.key);
+            Game::handle_keyboard_event(event.key);
         }
     }
 }
 
-void Game::handle_margins()
+void Game::move_handle_margins()
 {
     if (rects[RECT_LEN - 1].x >= WIDTH) // right margin
     {
@@ -183,7 +182,7 @@ void Game::move()
 {
     SDL_Rect head_prev = rects[RECT_LEN - 1];
 
-    switch (last_direction)
+    switch (previous_direction)
     {
     case Direction::RIGHT:
         Game::move_right();
@@ -199,22 +198,22 @@ void Game::move()
         break;
     }
 
-    Game::handle_margins();
+    Game::move_handle_margins();
     Game::move_body(head_prev);
 }
 
 void Game::play()
 {
-    if (last_direction == Direction::NONE)
+    if (previous_direction == Direction::NONE)
     {
         return;
     }
 
     Uint32 current_time = SDL_GetTicks();
-    if (current_time > last_time + MOVE_DELAY)
+    if (current_time > previous_time + MOVE_DELAY)
     {
         Game::move();
-        last_time = current_time;
+        previous_time = current_time;
     }
 }
 
@@ -232,10 +231,12 @@ void Game::render()
 
 void Game::run()
 {
-    last_time = SDL_GetTicks();
+    SDL_Event event;
+    previous_time = SDL_GetTicks();
+
     while (is_running)
     {
-        Game::handle_events();
+        Game::handle_events(event);
         Game::play();
         Game::render();
     }

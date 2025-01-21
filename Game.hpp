@@ -18,7 +18,6 @@ enum class Direction
 class Game
 {
 private:
-    bool is_running = true;
     constexpr static int WIDTH = 800;
     constexpr static int HEIGHT = 600;
     constexpr static int CELL_SIZE = 20;
@@ -26,29 +25,34 @@ private:
     constexpr static int RECT_LEN = 4;
     constexpr static Uint32 MOVE_DELAY = 400;
 
+    bool is_running = true;
+
     SDL_Window *window = nullptr;
-    SDL_Event event;
     SDL_Renderer *renderer = nullptr;
     SDL_Texture *tex = nullptr;
     SDL_Rect rects[RECT_LEN];
-    Uint32 last_time;
-    Uint32 current_time;
-    Direction last_direction;
+    Uint32 previous_time;
+    Direction previous_direction;
 
+    // Move methods
     void move_right();
     void move_left();
     void move_up();
     void move_down();
-    void clean();
+    void move_body(SDL_Rect head_prev);
+    void move_handle_margins();
+    void move();
+
+    // Event handling methods
+    void handle_events(SDL_Event event);
+    void handle_keyboard_event(SDL_KeyboardEvent key);
+
+    // Main methods
     void start();
     void stop();
-    void handle_key_input(SDL_KeyboardEvent key);
-    void handle_events();
-    void render();
     void play();
-    void handle_margins();
-    void move_body(SDL_Rect head_prev);
-    void move();
+    void render();
+    void clean();
 
     SDL_Texture *load_texture(const std::string &filepath);
 
