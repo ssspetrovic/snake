@@ -66,37 +66,38 @@ bool Game::init()
         return false;
     }
 
-    int x = 0;
-    for (int i = 0; i < RECT_LEN; ++i)
-    {
-        rects[i].x = x;
-        rects[i].y = 0;
-        rects[i].w = CELL_SIZE;
-        rects[i].h = CELL_SIZE;
-        x += STEP;
-    }
+    SDL_Rect part;
+    part.x = 0;
+    part.y = 0;
+    part.w = CELL_SIZE;
+    part.h = CELL_SIZE;
+    snake.push_back(part);
 
     return true;
 }
 
 void Game::move_right()
 {
-    rects[RECT_LEN - 1].x += STEP;
+    auto &part = snake.front();
+    part.x -= STEP;
 }
 
 void Game::move_left()
 {
-    rects[RECT_LEN - 1].x -= STEP;
+    auto &part = snake.front();
+    part.x -= STEP;
 }
 
 void Game::move_up()
 {
-    rects[RECT_LEN - 1].y -= STEP;
+    auto &part = snake.front();
+    part.y -= STEP;
 }
 
 void Game::move_down()
 {
-    rects[RECT_LEN - 1].y += STEP;
+    auto &part = snake.front();
+    part.y += STEP;
 }
 
 void Game::handle_keyboard_event(SDL_KeyboardEvent key)
@@ -150,56 +151,53 @@ void Game::handle_events(SDL_Event event)
 
 void Game::move_handle_margins()
 {
-    SDL_Rect rect_head = rects[RECT_LEN - 1];
+    auto &rect_head = snake.front();
     if (rect_head.x >= WIDTH) // right margin
     {
         rect_head.x = 0;
     }
-
-    if (rect_head.x < 0) // left margin
+    else if (rect_head.x < 0) // left margin
     {
         rect_head.x = WIDTH - CELL_SIZE;
     }
-
-    if (rect_head.y >= HEIGHT) // top margin
+    else if (rect_head.y >= HEIGHT) // top margin
     {
         rect_head.y = 0;
     }
-
-    if (rect_head.y < 0) // bottom margin
+    else if (rect_head.y < 0) // bottom margin
     {
         rect_head.y = HEIGHT - CELL_SIZE;
     }
-    rects[RECT_LEN - 1] = rect_head;
 }
 
 void Game::move_body(SDL_Rect head_prev)
 {
-    for (int i = RECT_LEN - 2; i >= 0; --i)
+    for (int i = 1; i < snake.size() - 1; ++i)
     {
-        SDL_Rect temp = rects[i];
-        rects[i] = head_prev;
-        head_prev = temp;
+        SDL_Rect tmp = snake[i];
+        snake[i] = snake[i - 1];
+        head_prev = tmp;
     }
 }
 
 void Game::move()
 {
-    SDL_Rect head_prev = rects[RECT_LEN - 1];
+    SDL_Rect &head = snake.front();
+    SDL_Rect &head_prev = snake.front();
 
     switch (previous_direction)
     {
     case Direction::RIGHT:
-        Game::move_right();
+        head.x += STEP;
         break;
     case Direction::LEFT:
-        Game::move_left();
+        head.x -= STEP;
         break;
     case Direction::UP:
-        Game::move_up();
+        head.y -= STEP;
         break;
     case Direction::DOWN:
-        Game::move_down();
+        head.y += STEP;
         break;
     }
 
@@ -228,8 +226,11 @@ void Game::render()
     SDL_RenderClear(renderer);
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRects(renderer, rects, RECT_LEN);
-    SDL_RenderDrawRects(renderer, rects, RECT_LEN);
+    for (const auto &part : snake)
+    {
+        SDL_RenderFillRect(renderer, &part);
+        SDL_RenderDrawRect(renderer, &part);
+    }
 
     SDL_RenderPresent(renderer);
 }

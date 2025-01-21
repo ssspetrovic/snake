@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <vector>
 
 #include <SDL2/SDL.h>
 
@@ -30,7 +31,8 @@ private:
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;
     SDL_Texture *tex = nullptr;
-    SDL_Rect rects[RECT_LEN];
+
+    std::vector<SDL_Rect> snake;
     Uint32 previous_time;
     Direction previous_direction;
 
@@ -42,6 +44,7 @@ private:
     void move_body(SDL_Rect head_prev);
     void move_handle_margins();
     void move();
+    void extend_snake();
 
     // Event handling methods
     void handle_events(SDL_Event event);
