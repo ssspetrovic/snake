@@ -27,6 +27,7 @@ private:
     constexpr static Uint32 MOVE_DELAY = 400;
 
     bool is_running = true;
+    bool should_extend = false;
 
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;
@@ -34,12 +35,15 @@ private:
     std::vector<SDL_Rect> snake;
     Uint32 previous_time;
     Direction previous_direction;
+    SDL_Rect apple;
 
     // Move methods
     void move_body(SDL_Rect head_prev);
     void move_handle_margins();
     void extend_snake(SDL_Rect tail_prev);
     void move();
+
+    SDL_Rect generate_apple();
 
     // Event handling methods
     void handle_events(SDL_Event event);

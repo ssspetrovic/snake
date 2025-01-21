@@ -1,4 +1,5 @@
 #include <iostream>
+#include <random>
 
 #include <SDL2/SDL.h>
 #include "Game.hpp"
@@ -34,7 +35,7 @@ void Game::clean()
 
 Game::~Game()
 {
-    Game::clean();
+    clean();
 }
 
 bool Game::init()
@@ -67,17 +68,17 @@ bool Game::init()
     part.h = CELL_SIZE;
     snake.push_back(part);
 
+    apple = generate_apple();
+
     return true;
 }
-
-bool should_extend = false;
 
 void Game::handle_keyboard_event(SDL_KeyboardEvent key)
 {
     switch (key.keysym.sym)
     {
     case SDLK_ESCAPE:
-        Game::stop();
+        stop();
         break;
     case SDLK_RIGHT:
         if (previous_direction != Direction::LEFT)
@@ -106,6 +107,9 @@ void Game::handle_keyboard_event(SDL_KeyboardEvent key)
     case SDLK_s:
         should_extend = true;
         break;
+    case SDLK_a:
+        apple = generate_apple();
+        break;
     }
 }
 
@@ -115,11 +119,11 @@ void Game::handle_events(SDL_Event event)
     {
         if (event.type == SDL_QUIT)
         {
-            Game::stop();
+            stop();
         }
         if (event.type == SDL_KEYDOWN)
         {
-            Game::handle_keyboard_event(event.key);
+            handle_keyboard_event(event.key);
         }
     }
 }
@@ -161,6 +165,53 @@ void Game::extend_snake(SDL_Rect tail_prev)
     snake.push_back(tail_prev);
 }
 
+SDL_Rect Game::generate_apple()
+{
+    const int row_num = HEIGHT / CELL_SIZE;
+    const int col_num = WIDTH / CELL_SIZE;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    std::uniform_int_distribution<uint> x_uniform(0, col_num - 1);
+    std::uniform_int_distribution<uint> y_uniform(0, row_num - 1);
+
+    int x_rand = -1;
+    int y_rand = -1;
+
+    bool is_apple_valid = false;
+    while (!is_apple_valid)
+    {
+        x_rand = x_uniform(gen) * CELL_SIZE;
+        y_rand = y_uniform(gen) * CELL_SIZE;
+
+        is_apple_valid = true;
+        for (const auto &part : snake)
+        {
+            if (x_rand == part.x && y_rand == part.y)
+            {
+                is_apple_valid = false;
+                break;
+            }
+        }
+    }
+
+    // Fallback
+    if (x_rand == -1 || y_rand == -1)
+    {
+        x_rand = 0;
+        y_rand = 0;
+    }
+
+    SDL_Rect new_apple;
+    new_apple.x = x_rand;
+    new_apple.y = y_rand;
+    new_apple.w = CELL_SIZE;
+    new_apple.h = CELL_SIZE;
+
+    return new_apple;
+}
+
 void Game::move()
 {
     SDL_Rect &head = snake.front();
@@ -183,8 +234,8 @@ void Game::move()
         break;
     }
 
-    Game::move_handle_margins();
-    Game::move_body(head_prev);
+    move_handle_margins();
+    move_body(head_prev);
     SDL_Rect tail_new = snake.back();
 
     if (should_extend)
@@ -204,7 +255,7 @@ void Game::play()
     Uint32 current_time = SDL_GetTicks();
     if (current_time > previous_time + MOVE_DELAY)
     {
-        Game::move();
+        move();
         previous_time = current_time;
     }
 }
@@ -213,6 +264,10 @@ void Game::render()
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
+
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawRect(renderer, &apple);
+    SDL_RenderFillRect(renderer, &apple);
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     for (const auto &part : snake)
@@ -231,8 +286,8 @@ void Game::run()
 
     while (is_running)
     {
-        Game::handle_events(event);
-        Game::play();
-        Game::render();
+        handle_events(event);
+        play();
+        render();
     }
 }
