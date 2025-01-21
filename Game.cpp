@@ -160,11 +160,6 @@ void Game::move_body(SDL_Rect head_prev)
     }
 }
 
-void Game::extend_snake(SDL_Rect tail_prev)
-{
-    snake.push_back(tail_prev);
-}
-
 SDL_Rect Game::generate_apple()
 {
     const int row_num = HEIGHT / CELL_SIZE;
@@ -240,7 +235,7 @@ void Game::move()
 
     if (should_extend)
     {
-        extend_snake(tail_prev);
+        snake.push_back(tail_prev);
         should_extend = false;
     }
 }
