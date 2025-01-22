@@ -18,7 +18,7 @@ cd snake
 
 Compile the binary:
 ```bash
-g++ -o snake snake.cpp Game.cpp `sdl2-config --cflags --libs`
+g++ -o snake main.cpp Game.cpp `sdl2-config --cflags --libs`
 ```
 
 Run the game:
@@ -46,7 +46,7 @@ Copy the `bin`, `include`, `lib` and `share` directories from the extracted arch
 Build the executable:
 
 ```bash
-g++ -I./include -L./lib -o snake.exe Game.cpp snake.cpp -lmingw32 -lSDL2main -lSDL2 -mwindows
+g++ -I./include -L./lib -o snake.exe Game.cpp main.cpp -lmingw32 -lSDL2main -lSDL2 -mwindows
 ```
 
 Run the game:
