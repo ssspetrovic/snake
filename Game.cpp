@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 #include "Game.hpp"
 
-Game::Game() : previous_direction(Direction::NONE), previous_time(0) {}
+Game::Game() : current_direction(Direction::NONE), previous_time(0) {}
 
 void Game::start()
 {
@@ -81,27 +81,27 @@ void Game::handle_keyboard_event(SDL_KeyboardEvent key)
         stop();
         break;
     case SDLK_RIGHT:
-        if (previous_direction != Direction::LEFT)
+        if (current_direction != Direction::LEFT)
         {
-            previous_direction = Direction::RIGHT;
+            next_direction = Direction::RIGHT;
         }
         break;
     case SDLK_LEFT:
-        if (previous_direction != Direction::RIGHT)
+        if (current_direction != Direction::RIGHT)
         {
-            previous_direction = Direction::LEFT;
+            next_direction = Direction::LEFT;
         }
         break;
     case SDLK_UP:
-        if (previous_direction != Direction::DOWN)
+        if (current_direction != Direction::DOWN)
         {
-            previous_direction = Direction::UP;
+            next_direction = Direction::UP;
         }
         break;
     case SDLK_DOWN:
-        if (previous_direction != Direction::UP)
+        if (current_direction != Direction::UP)
         {
-            previous_direction = Direction::DOWN;
+            next_direction = Direction::DOWN;
         }
         break;
     }
@@ -219,7 +219,7 @@ void Game::move()
     SDL_Rect head_prev = snake.front();
     SDL_Rect tail_prev = snake.back();
 
-    switch (previous_direction)
+    switch (current_direction)
     {
     case Direction::RIGHT:
         head.x += STEP;
@@ -253,14 +253,16 @@ void Game::move()
 
 void Game::play()
 {
-    if (previous_direction == Direction::NONE)
+    if (current_direction == Direction::NONE)
     {
+        current_direction = next_direction;
         return;
     }
 
     Uint32 current_time = SDL_GetTicks();
     if (current_time > previous_time + MOVE_DELAY)
     {
+        current_direction = next_direction;
         move();
         previous_time = current_time;
     }

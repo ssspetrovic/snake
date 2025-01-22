@@ -32,9 +32,11 @@ private:
     SDL_Renderer *renderer = nullptr;
 
     std::vector<SDL_Rect> snake;
-    Uint32 previous_time;
-    Direction previous_direction;
     SDL_Rect apple;
+    
+    Uint32 previous_time;
+    Direction current_direction;
+    Direction next_direction;
 
     // Move methods
     void move_body(SDL_Rect head_prev);
