@@ -1,4 +1,4 @@
-# Snake | SDL2/C++
+# Snake Game
 
 A simple Snake game written in C++ using SDL2 as the graphics library.
 
