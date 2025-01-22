@@ -165,8 +165,8 @@ SDL_Rect Game::generate_apple()
     std::uniform_int_distribution<unsigned int> x_uniform(0, col_num - 1);
     std::uniform_int_distribution<unsigned int> y_uniform(0, row_num - 1);
 
-    int x_rand = -1;
-    int y_rand = -1;
+    unsigned int x_rand = 0;
+    unsigned int y_rand = 0;
 
     bool is_apple_valid = false;
     while (!is_apple_valid)
@@ -183,13 +183,6 @@ SDL_Rect Game::generate_apple()
                 break;
             }
         }
-    }
-
-    // Fallback
-    if (x_rand == -1 || y_rand == -1)
-    {
-        x_rand = 0;
-        y_rand = 0;
     }
 
     SDL_Rect new_apple;
