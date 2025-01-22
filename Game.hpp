@@ -39,6 +39,7 @@ private:
     // Move methods
     void move_body(SDL_Rect head_prev);
     void move_handle_margins();
+    bool is_collision();
     void move();
 
     SDL_Rect generate_apple();

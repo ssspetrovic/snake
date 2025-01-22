@@ -194,6 +194,25 @@ SDL_Rect Game::generate_apple()
     return new_apple;
 }
 
+bool Game::is_collision()
+{
+    if (snake.size() < 2)
+    {
+        return false;
+    }
+
+    SDL_Rect head = snake[0];
+    for (int i = 1; i < snake.size(); ++i)
+    {
+        if (head.x == snake[i].x && head.y == snake[i].y)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void Game::move()
 {
     SDL_Rect &head = snake.front();
@@ -218,7 +237,12 @@ void Game::move()
 
     move_handle_margins();
     move_body(head_prev);
-    SDL_Rect tail_new = snake.back();
+
+    if (is_collision())
+    {
+        is_running = false;
+        return;
+    }
 
     if (head.x == apple.x && head.y == apple.y)
     {
