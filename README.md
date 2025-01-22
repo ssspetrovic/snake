@@ -1,5 +1,24 @@
 # Snake | SDL2/C++
 
+A simple Snake game written in C++ using SDL2 as the graphics library.
+
+---
+
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/792ffe71-a40f-44b3-acc9-c54ab4e28a9f" alt="Snake Gameplay Image" width="600">
+    <p><i>Gameplay Screenshot</i></p>
+</div>
+
+---
+
+## Features
+
+- Classic snake gameplay with edge wrapping.
+- Minimalistic design and straightforward controls.
+- Cross-platform compatibility (Linux and Windows).
+
+---
+
 ## Linux Instructions
 
 ### Dependency Installation
@@ -8,7 +27,7 @@
 sudo apt install libsdl2-dev
 ```
 
-### Running the Game
+### Build and Run
 
 Clone the repository:
 
@@ -17,7 +36,7 @@ git clone https://github.com/ssspetrovic/snake.git
 cd snake
 ```
 
-Compile the binary:
+Compile the game:
 
 ```bash
 g++ -o snake main.cpp Game.cpp `sdl2-config --cflags --libs`
@@ -28,6 +47,7 @@ Run the game:
 ```bash
 ./snake
 ```
+---
 
 ## Windows 10/11 Instructions
 
@@ -57,9 +77,3 @@ Run the game:
 ```ps
 .\snake.exe
 ```
-
-## Playing the game
-
-Control the snake using the arrow keys (&larr;, &uarr;, &rarr; or &darr;) and try to eat the 🍎!
-<br/>
-Use `ESC` key or click on the &#10006; button to exit the game.
