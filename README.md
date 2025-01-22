@@ -47,6 +47,7 @@ Run the game:
 ```bash
 ./snake
 ```
+
 ---
 
 ## Windows 10/11 Instructions
@@ -62,7 +63,9 @@ git clone https://github.com/ssspetrovic/snake.git
 cd snake
 ```
 
-Download the SDL binaries from https://github.com/libsdl-org/SDL/releases. Tested version can be downloaded from this link: https://github.com/libsdl-org/SDL/releases/download/release-2.30.11/SDL2-devel-2.30.11-mingw.zip/.
+Manually choose and download the SDL binaries from [the official SDL2 source](https://github.com/libsdl-org/SDL/releases).
+
+If you prefer to use the tested version can be downloaded from [here](https://github.com/libsdl-org/SDL/releases/download/release-2.30.11/SDL2-devel-2.30.11-mingw.zip/).
 
 Copy the `bin`, `include`, `lib` and `share` directories from the extracted archive into the root of the repository.
 
