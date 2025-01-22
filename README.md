@@ -46,7 +46,7 @@ Copy the `bin`, `include`, `lib` and `share` directories from the extracted arch
 Build the executable:
 
 ```bash
-g++ -I./include -L./lib -o snake.exe main.cpp Game.cpp -lmingw32 -lSDL2main -lSDL2
+g++ -I./include -L./lib -o snake.exe Game.cpp snake.cpp -lmingw32 -lSDL2main -lSDL2 -mwindows
 ```
 
 Run the game:
