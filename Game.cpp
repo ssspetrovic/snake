@@ -162,8 +162,8 @@ SDL_Rect Game::generate_apple()
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    std::uniform_int_distribution<uint> x_uniform(0, col_num - 1);
-    std::uniform_int_distribution<uint> y_uniform(0, row_num - 1);
+    std::uniform_int_distribution<unsigned int> x_uniform(0, col_num - 1);
+    std::uniform_int_distribution<unsigned int> y_uniform(0, row_num - 1);
 
     int x_rand = -1;
     int y_rand = -1;
