@@ -5,14 +5,14 @@
 ### Dependency Installation
 
 ```bash
-sudo apt install libsdl2-2.0-0
+sudo apt install libsdl2-dev
 ```
 
 ### Running the Game
 
 Clone the repository:
 ```bash
-git clone git@github.com:ssspetrovic/snake.git
+git clone https://github.com/ssspetrovic/snake.git
 cd snake
 ```
 
@@ -35,7 +35,7 @@ Prerequisites: mingw64 and g++
 Clone the environment:
 
 ```bash
-git clone git@github.com:ssspetrovic/snake.git
+git clone https://github.com/ssspetrovic/snake.git
 cd snake
 ```
 
