@@ -11,17 +11,20 @@ sudo apt install libsdl2-dev
 ### Running the Game
 
 Clone the repository:
+
 ```bash
 git clone https://github.com/ssspetrovic/snake.git
 cd snake
 ```
 
 Compile the binary:
+
 ```bash
 g++ -o snake main.cpp Game.cpp `sdl2-config --cflags --libs`
 ```
 
 Run the game:
+
 ```bash
 ./snake
 ```
