@@ -51,8 +51,8 @@ g++ -I./include -L./lib -o snake.exe Game.cpp main.cpp -lmingw32 -lSDL2main -lSD
 
 Run the game:
 
-```bash
-./snake.exe
+```ps
+.\snake.exe
 ```
 
 ## Playing the game
