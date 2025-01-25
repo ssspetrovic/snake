@@ -5,7 +5,7 @@ A simple Snake game written in C++ using SDL2 as the graphics library.
 ---
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/792ffe71-a40f-44b3-acc9-c54ab4e28a9f" alt="Snake Gameplay Image" width="600">
+    <img src="https://github.com/user-attachments/assets/42029540-74ad-45d9-9c7f-aef0b47ed443" alt="Snake Gameplay Image" width="600">
     <p><i>Gameplay Screenshot</i></p>
 </div>
 
