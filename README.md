@@ -14,6 +14,7 @@ A simple Snake game written in C++ using SDL2 as the graphics library.
 ## Features
 
 - Classic snake gameplay with edge wrapping.
+- Press space to speed up 💨
 - Minimalistic design and straightforward controls.
 - Cross-platform compatibility (Linux and Windows).
 
