@@ -24,7 +24,8 @@ private:
     constexpr static int CELL_SIZE = 20;
     constexpr static int STEP = 20;
     constexpr static int RECT_LEN = 4;
-    constexpr static Uint32 MOVE_DELAY = 250;
+    constexpr static Uint32 DEFAULT_MOVE_DELAY = 220;
+    constexpr static Uint32 SPED_UP_MOVE_DELAY = 80;
 
     bool is_running = true;
 
@@ -34,6 +35,7 @@ private:
     std::vector<SDL_Rect> snake;
     SDL_Rect apple;
     
+    Uint32 move_delay;
     Uint32 previous_time;
     Direction current_direction;
     Direction next_direction;

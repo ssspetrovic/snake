@@ -61,6 +61,8 @@ bool Game::init()
         return false;
     }
 
+    move_delay = DEFAULT_MOVE_DELAY;
+
     SDL_Rect part;
     part.x = WIDTH / 2 - CELL_SIZE;
     part.y = HEIGHT / 2 - CELL_SIZE;
@@ -104,6 +106,16 @@ void Game::handle_keyboard_event(SDL_KeyboardEvent key)
             next_direction = Direction::DOWN;
         }
         break;
+    case SDLK_SPACE:
+        if (key.state == SDL_PRESSED)
+        {
+            move_delay = SPED_UP_MOVE_DELAY;
+        }
+        else if (key.state == SDL_RELEASED)
+        {
+            move_delay = DEFAULT_MOVE_DELAY;
+        }
+        break;
     }
 }
 
@@ -115,7 +127,7 @@ void Game::handle_events(SDL_Event event)
         {
             stop();
         }
-        if (event.type == SDL_KEYDOWN)
+        if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
         {
             handle_keyboard_event(event.key);
         }
@@ -260,7 +272,7 @@ void Game::play()
     }
 
     Uint32 current_time = SDL_GetTicks();
-    if (current_time > previous_time + MOVE_DELAY)
+    if (current_time > previous_time + move_delay)
     {
         current_direction = next_direction;
         move();
