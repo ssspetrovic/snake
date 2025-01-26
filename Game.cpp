@@ -132,10 +132,10 @@ bool Game::init()
 
     is_game_over = false;
 
-    text_rect.x = 50;
-    text_rect.y = 50;
     text_rect.w = text_surface->w;
     text_rect.h = text_surface->h;
+    text_rect.x = (WIDTH - text_surface->w) / 2;
+    text_rect.y = (HEIGHT - text_surface->h) / 2;
 
     init_snake();
     generate_apple();
@@ -173,6 +173,10 @@ void Game::handle_keyboard_event(SDL_KeyboardEvent key)
         {
             next_direction = Direction::DOWN;
         }
+        break;
+    case SDLK_x:
+        restart();
+        is_game_over = true;
         break;
     case SDLK_SPACE:
         if (is_game_over)
