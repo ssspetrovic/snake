@@ -25,7 +25,7 @@ A simple Snake game written in C++ using SDL2 as the graphics library.
 ### Dependency Installation
 
 ```bash
-sudo apt install libsdl2-dev
+sudo apt install libsdl2-dev libsdl2-ttf-dev
 ```
 
 ### Build and Run
@@ -40,7 +40,7 @@ cd snake
 Compile the game:
 
 ```bash
-g++ -o snake main.cpp Game.cpp `sdl2-config --cflags --libs`
+g++ -o snake.out main.cpp Game.cpp `sdl2-config --cflags --libs` -lSDL2_ttf && ./snake.out
 ```
 
 Run the game:
