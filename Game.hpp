@@ -24,8 +24,8 @@ private:
     constexpr static int CELL_SIZE = 20;
     constexpr static int STEP = 20;
     constexpr static int RECT_LEN = 4;
-    constexpr static Uint32 DEFAULT_MOVE_DELAY = 220;
-    constexpr static Uint32 SPED_UP_MOVE_DELAY = 80;
+    constexpr static Uint32 DEFAULT_MOVE_DELAY = 80;
+    constexpr static Uint32 SPED_UP_MOVE_DELAY = 40;
 
     bool is_running = true;
 
