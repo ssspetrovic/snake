@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 enum class Direction
 {
@@ -26,6 +27,7 @@ private:
     constexpr static int RECT_LEN = 4;
     constexpr static Uint32 DEFAULT_MOVE_DELAY = 80;
     constexpr static Uint32 SPED_UP_MOVE_DELAY = 40;
+    constexpr static int FONT_SIZE = 62;
 
     bool is_running = true;
 
@@ -34,11 +36,20 @@ private:
 
     std::vector<SDL_Rect> snake;
     SDL_Rect apple;
-    
+
     Uint32 move_delay;
     Uint32 previous_time;
     Direction current_direction;
     Direction next_direction;
+
+    // Font stuff
+    const std::string FONT_PATH = "ARCADE_N.TTF";
+    TTF_Font *font;
+    SDL_Color text_color;
+    SDL_Surface *text_surface;
+    SDL_Texture *text_texture;
+    SDL_Rect text_rect;
+    bool is_game_over;
 
     // Move methods
     void move_body(SDL_Rect head_prev);
@@ -46,7 +57,8 @@ private:
     bool is_collision();
     void move();
 
-    SDL_Rect generate_apple();
+    void init_snake();
+    void generate_apple();
 
     // Event handling methods
     void handle_events(SDL_Event event);
@@ -55,6 +67,7 @@ private:
     // Main methods
     void start();
     void stop();
+    void restart();
     void play();
     void render();
     void clean();

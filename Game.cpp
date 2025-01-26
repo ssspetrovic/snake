@@ -2,6 +2,8 @@
 #include <random>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
 #include "Game.hpp"
 
 Game::Game() : current_direction(Direction::NONE), previous_time(0) {}
@@ -14,6 +16,13 @@ void Game::start()
 void Game::stop()
 {
     is_running = false;
+}
+
+void Game::restart()
+{
+    init_snake();
+    generate_apple();
+    is_game_over = false;
 }
 
 void Game::clean()
@@ -30,12 +39,39 @@ void Game::clean()
         window = nullptr;
     }
 
+    if (font)
+    {
+        TTF_CloseFont(font);
+        font = nullptr;
+    }
+
+    if (text_texture)
+    {
+        SDL_DestroyTexture(text_texture);
+        text_texture = nullptr;
+    }
+
     SDL_Quit();
 }
 
 Game::~Game()
 {
     clean();
+}
+
+void Game::init_snake()
+{
+    if (!snake.empty())
+    {
+        snake.clear();
+    }
+
+    SDL_Rect part;
+    part.x = WIDTH / 2 - CELL_SIZE;
+    part.y = HEIGHT / 2 - CELL_SIZE;
+    part.w = CELL_SIZE;
+    part.h = CELL_SIZE;
+    snake.push_back(part);
 }
 
 bool Game::init()
@@ -61,16 +97,48 @@ bool Game::init()
         return false;
     }
 
+    if (TTF_Init() < 0)
+    {
+        std::cerr << "Failed to initialize SDL TTF: " << TTF_GetError() << std::endl;
+        SDL_Quit();
+        return false;
+    }
+
     move_delay = DEFAULT_MOVE_DELAY;
 
-    SDL_Rect part;
-    part.x = WIDTH / 2 - CELL_SIZE;
-    part.y = HEIGHT / 2 - CELL_SIZE;
-    part.w = CELL_SIZE;
-    part.h = CELL_SIZE;
-    snake.push_back(part);
+    font = TTF_OpenFont(FONT_PATH.c_str(), FONT_SIZE);
 
-    apple = generate_apple();
+    if (!font)
+    {
+        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+        return false;
+    }
+
+    text_color = {255, 255, 255, 255};
+    text_surface = TTF_RenderText_Solid(font, "Game Over!", text_color);
+
+    if (!text_surface)
+    {
+        std::cerr << "Failed to create the text surface:" << SDL_GetError() << std::endl;
+        return false;
+    }
+
+    text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
+    if (!text_texture)
+    {
+        std::cerr << "Failed to create the text texture:" << SDL_GetError() << std::endl;
+        return false;
+    }
+
+    is_game_over = false;
+
+    text_rect.x = 50;
+    text_rect.y = 50;
+    text_rect.w = text_surface->w;
+    text_rect.h = text_surface->h;
+
+    init_snake();
+    generate_apple();
 
     return true;
 }
@@ -107,6 +175,12 @@ void Game::handle_keyboard_event(SDL_KeyboardEvent key)
         }
         break;
     case SDLK_SPACE:
+        if (is_game_over)
+        {
+            restart();
+            break;
+        }
+
         if (key.state == SDL_PRESSED)
         {
             move_delay = SPED_UP_MOVE_DELAY;
@@ -166,7 +240,7 @@ void Game::move_body(SDL_Rect head_prev)
     }
 }
 
-SDL_Rect Game::generate_apple()
+void Game::generate_apple()
 {
     const int row_num = HEIGHT / CELL_SIZE;
     const int col_num = WIDTH / CELL_SIZE;
@@ -197,13 +271,10 @@ SDL_Rect Game::generate_apple()
         }
     }
 
-    SDL_Rect new_apple;
-    new_apple.x = x_rand;
-    new_apple.y = y_rand;
-    new_apple.w = CELL_SIZE;
-    new_apple.h = CELL_SIZE;
-
-    return new_apple;
+    apple.x = x_rand;
+    apple.y = y_rand;
+    apple.w = CELL_SIZE;
+    apple.h = CELL_SIZE;
 }
 
 bool Game::is_collision()
@@ -252,14 +323,14 @@ void Game::move()
 
     if (is_collision())
     {
-        is_running = false;
+        is_game_over = true;
         return;
     }
 
     if (head.x == apple.x && head.y == apple.y)
     {
         snake.push_back(tail_prev);
-        apple = generate_apple();
+        generate_apple();
     }
 }
 
@@ -285,15 +356,22 @@ void Game::render()
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawRect(renderer, &apple);
-    SDL_RenderFillRect(renderer, &apple);
-
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-    for (const auto &part : snake)
+    if (is_game_over)
     {
-        SDL_RenderFillRect(renderer, &part);
-        SDL_RenderDrawRect(renderer, &part);
+        SDL_RenderCopy(renderer, text_texture, NULL, &text_rect);
+    }
+    else
+    {
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_RenderDrawRect(renderer, &apple);
+        SDL_RenderFillRect(renderer, &apple);
+
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+        for (const auto &part : snake)
+        {
+            SDL_RenderFillRect(renderer, &part);
+            SDL_RenderDrawRect(renderer, &part);
+        }
     }
 
     SDL_RenderPresent(renderer);
