@@ -40,7 +40,7 @@ cd snake
 Compile the game:
 
 ```bash
-g++ -o snake.out main.cpp Game.cpp `sdl2-config --cflags --libs` -lSDL2_ttf && ./snake.out
+g++ -o snake main.cpp Game.cpp `sdl2-config --cflags --libs` -lSDL2_ttf
 ```
 
 Run the game:
